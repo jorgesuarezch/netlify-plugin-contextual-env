@@ -23,7 +23,7 @@ function setEnvWithValue(key, contextOrBranch, mode) {
 module.exports = {
   onPreBuild: async ({ inputs }) => {
     const context = `${process.env.CONTEXT}`.toUpperCase().replace(/-/g, '_');
-    const branch = `${process.env.BRANCH}`.toUpperCase().replace(/-/g, '_');
+    const branch = `${process.env.BRANCH}`.toUpperCase().replace(/[-\/]/g, '_');
     const { mode } = inputs;
 
     const envOverrides = Object.keys(process.env).map((key) => [
@@ -36,7 +36,7 @@ module.exports = {
     if (replaced.length) {
       console.log(`Replaced ${replaced.length} ENVs`);
     } else {
-      console.log(`Nothing found... keeping default ENVs`);
+      console.log(`Nothing found... keeping default ENVs. Context: ${context} Branch ${branch}`);
     }
   },
 };

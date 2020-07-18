@@ -43,6 +43,15 @@ describe('onPreBuild', () => {
 
       expect(process.env.DATABASE_URL).toBe(process.env.HELLO_DATABASE_URL);
     });
+
+    it('supports names with slashes', async () => {
+      process.env.DATABASE_URL = 'https://dev.com';
+      process.env.RELEASE_HELLO_DATABASE_URL = 'https://stage.com';
+      process.env.BRANCH = 'release/hello';
+      await onPreBuild({ inputs: { mode: 'prefix' } });
+
+      expect(process.env.DATABASE_URL).toBe(process.env.RELEASE_HELLO_DATABASE_URL);
+    });
   });
 
   describe('with suffix branch ENV overrides', () => {
@@ -53,6 +62,15 @@ describe('onPreBuild', () => {
       await onPreBuild({ inputs: { mode: 'suffix' } });
 
       expect(process.env.DATABASE_URL).toBe(process.env.DATABASE_URL_HELLO);
+    });
+
+    it('supports names with slashes', async () => {
+      process.env.DATABASE_URL = 'https://dev.com';
+      process.env.DATABASE_URL_RELEASE_HELLO = 'https://stage.com';
+      process.env.BRANCH = 'release/hello';
+      await onPreBuild({ inputs: { mode: 'suffix' } });
+
+      expect(process.env.DATABASE_URL).toBe(process.env.DATABASE_URL_RELEASE_HELLO);
     });
   });
 
